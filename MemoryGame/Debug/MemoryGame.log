@@ -1,0 +1,17 @@
+﻿Build started 8/5/2019 1:38:44 AM.
+     1>Project "c:\Users\duytr\documents\visual studio 2012\Projects\MemoryGame\MemoryGame\MemoryGame.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp Menu.cpp Play.cpp
+     1>cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+         main.cpp
+     1>c:\users\duytr\documents\visual studio 2012\projects\memorygame\memorygame\main.cpp : fatal error C1902: Program database manager mismatch; please check your installation
+         Menu.cpp
+     1>c:\users\duytr\documents\visual studio 2012\projects\memorygame\memorygame\menu.cpp : fatal error C1902: Program database manager mismatch; please check your installation
+         Play.cpp
+     1>c:\users\duytr\documents\visual studio 2012\projects\memorygame\memorygame\play.cpp : fatal error C1902: Program database manager mismatch; please check your installation
+         Generating Code...
+     1>Done Building Project "c:\Users\duytr\documents\visual studio 2012\Projects\MemoryGame\MemoryGame\MemoryGame.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.42
