@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -28,8 +28,8 @@ enum selection
 SDL_Window* MWindow;
 SDL_Surface* MScreen;
 SDL_Renderer* MRenderer;
-SDL_Texture *Logo, *BG, *BG2, *back_button, *quit, *reg, *uet, *prePlay;
-SDL_Texture *menu[4][2], *tutor[2], *arrow[2], *Y[2], *N[2], *hscore[3], *easy[2], *med[2], *hard[2], *play[2];
+SDL_Texture *Logo, *BG, *BG2, *back_button, *quit, *prePlay;
+SDL_Texture *menu[4][2], *tutor[2], *arrow[2], *Y[2], *N[2], *hscore, *easy[2], *med[2], *hard[2], *play[2];
 SDL_Texture *Mspeaker[2];
 bool status[6]={false}, Msound=1;
 string hc_name[5];
@@ -61,11 +61,6 @@ SDL_Texture* loadText(string text, SDL_Color color)
 
 void MloadImage()
 {
-    reg= MloadTexture("menu/reg.PNG");
-    SDL_SetTextureBlendMode(reg, SDL_BLENDMODE_BLEND);
-    uet= MloadTexture("menu/UET.PNG");
-    SDL_SetTextureBlendMode(uet, SDL_BLENDMODE_BLEND);
-
     Logo= MloadTexture("menu/Game_Logo.PNG");
     BG= MloadTexture("menu/BG.PNG");
     back_button= MloadTexture("menu/back.PNG");
@@ -86,19 +81,11 @@ void MloadImage()
     tutor[1] = MloadTexture("menu/TUTOR2.PNG");
     arrow[0] = MloadTexture("menu/arrow1.PNG");
     arrow[1] = MloadTexture("menu/arrow2.PNG");
-    hscore[0]= MloadTexture("menu/highscore_0.PNG");
-    hscore[1]= MloadTexture("menu/highscore_1.PNG");
-    hscore[2]= MloadTexture("menu/highscore_2.PNG");
+    hscore= MloadTexture("menu/highscore.PNG");
     Y[0]= MloadTexture("menu/YES.PNG");
     Y[1]= MloadTexture("menu/YES_s.PNG");
     N[0]= MloadTexture("menu/NO.PNG");
     N[1]= MloadTexture("menu/NO_s.PNG");
-    easy[0]= MloadTexture("menu/EASY.PNG");
-    easy[1]= MloadTexture("menu/EASY_s.PNG");
-    med[0]= MloadTexture("menu/MEDIUM.PNG");
-    med[1]= MloadTexture("menu/MEDIUM_s.PNG");
-    hard[0]= MloadTexture("menu/HARD.PNG");
-    hard[1]= MloadTexture("menu/HARD_s.PNG");
     play[0]= MloadTexture("menu/playnow.PNG");
     play[1]= MloadTexture("menu/playnow_s.PNG");
 }
@@ -159,9 +146,17 @@ void apply_BG(int x, SDL_Texture* source)
     SDL_Rect off2 = {0,0,off1.w,680};
     SDL_RenderCopy(MRenderer, source, &off1, &off2);
     if (x+1200<=1360) return;
-    off1 = {0,0,x,680};
-    off2 = {1360-x,0,off1.w,680};
-    SDL_RenderCopy(MRenderer, source, &off1, &off2);
+	off1.x = 0;
+	off1.y = 0;
+	off1.w = x;
+	off1.h = 680;
+	
+	off2.x = 1360-x;
+	off2.y = 0;
+	off2.w = off1.w;
+	off2.h = 680;
+
+	SDL_RenderCopy(MRenderer, source, &off1, &off2);
 }
 
 int Position(int x_, int y_)
@@ -224,29 +219,41 @@ string numToSt(int k)
     return s;
 }
 
-void readScore(int diffi)
+void readScore()
 {
     ifstream fi;
-    switch (diffi) {
-        case 0: {fi.open("high_score_0.txt",ios::in); break;}
-        case 1: {fi.open("high_score_1.txt",ios::in); break;}
-        case 2: {fi.open("high_score_2.txt",ios::in); break;}
-    }
-
+	fi.open("high_score.txt",ios::in);
     for (int i=0; i<5; i++){
         getline(fi,hc_name[i]);
         fi>>hc_score[i];
     }
-    hnamew[0]= loadText(hc_name[0], SDL_Color {250,240,0});
-    hscorew[0]= loadText(numToSt(hc_score[0]), SDL_Color {250,240,0});
-    hnamew[1]= loadText(hc_name[1], SDL_Color {126,102,102});
-    hscorew[1]= loadText(numToSt(hc_score[1]), SDL_Color {126,102,102});
-    hnamew[2]= loadText(hc_name[2], SDL_Color {139,57,7});
-    hscorew[2]= loadText(numToSt(hc_score[2]), SDL_Color {139,57,7});
-    hnamew[3]= loadText(hc_name[3], SDL_Color {22,168,22});
-    hscorew[3]= loadText(numToSt(hc_score[3]), SDL_Color {22,168,22});
-    hnamew[4]= loadText(hc_name[4], SDL_Color {22,168,22});
-    hscorew[4]= loadText(numToSt(hc_score[4]), SDL_Color {22,168,22});
+	SDL_Color color;
+	color.r = 250;
+	color.g = 240;
+	color.b = 0;
+	
+    hnamew[0]= loadText(hc_name[0], color);
+    hscorew[0]= loadText(numToSt(hc_score[0]), color);
+	
+	color.r = 126;
+	color.g = 102;
+	color.b = 102;
+    hnamew[1]= loadText(hc_name[1], color);
+    hscorew[1]= loadText(numToSt(hc_score[1]), color);
+	
+	color.r = 139;
+	color.g = 57;
+	color.b = 7;
+	hnamew[2]= loadText(hc_name[2], color);
+    hscorew[2]= loadText(numToSt(hc_score[2]), color);
+
+	color.r = 22;
+	color.g = 168;
+	color.b = 22;
+    hnamew[3]= loadText(hc_name[3], color);
+    hscorew[3]= loadText(numToSt(hc_score[3]), color);
+    hnamew[4]= loadText(hc_name[4], color);
+    hscorew[4]= loadText(numToSt(hc_score[4]), color);
 }
 
 void writeScore()
@@ -263,11 +270,9 @@ void writeScore()
 void showScore(int* k)
 {
     Mix_PlayChannel( -1, Mclick, 0 );
-
     int x, y;
-    int recent=0;
     SDL_Event e;
-    readScore(recent);
+    readScore();
     while (true){
         apply_BG(*k,BG);
         if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
@@ -276,21 +281,9 @@ void showScore(int* k)
                 Mix_PlayChannel( -1, Mclick, 0 );
                 return;
             }
-            if (x>=20&&x<=100&&y>=360&&y<=360+55&&recent>0) {
-                Mix_PlayChannel( -1, Mclick, 0 );
-                recent--;
-                readScore(recent);
-            }
-            if (x>=1100&&x<=1180&&y>=360&&y<=360+55&&recent<2) {
-                Mix_PlayChannel( -1, Mclick, 0 );
-                recent++;
-                readScore(recent);
-            }
         }
-        Mapply_surface(20,20,1160,640,hscore[recent]);
+        Mapply_surface(20,20,1160,640,hscore);
         Mapply_surface(20,20,120,66,back_button);
-        if (recent!=0) Mapply_surface(20,360,80,55,arrow[0]);
-        if (recent!=2) Mapply_surface(1100,360,80,55,arrow[1]);
         writeScore();
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
@@ -363,61 +356,6 @@ void showQuit(int *k)
     }
 }
 
-bool selectMode(int* k)
-{
-    ofstream fo("game_mode.txt");
-    Mix_PlayChannel( -1, Mclick, 0 );
-    int x, y, selection= 0;
-    SDL_Event e;
-    while (true){
-        apply_BG(*k,BG);
-        if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
-            x= e.button.x; y= e.button.y;
-            if (x>=20&&x<=140&&y>=20&&y<=86) { //back
-                Mix_PlayChannel( -1, Mclick, 0 );
-                return 0;
-            }
-            if (x>=135&&x<=400&&y>=250&&y<=383) { //easy
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MEASY;
-            }
-            if (x>=467&&x<=732&&y>=250&&y<=383) { //medium
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MMEDIUM;
-            }
-            if (x>=800&&x<=1065&&y>=250&&y<=383) { //hard
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MHARD;
-            }
-            if (x>=490&&x<=710&&y>=450&&y<=535) { //playnow
-                Mix_PlayChannel( -1, Mclick, 0 );
-                Mapply_surface(490,450,220,85,play[1]);
-                SDL_RenderPresent(MRenderer);
-                SDL_Delay(200);
-                fo<<selection<<' '<<0;
-                return 1;
-            }
-        }
-        Mapply_surface(135,20,930,640,prePlay);
-        Mapply_surface(135,250,265,133,easy[0]);
-        Mapply_surface(467,250,265,133,med[0]);
-        Mapply_surface(800,250,265,133,hard[0]);
-
-        switch (selection) {
-            case MEASY : {Mapply_surface(135,250,265,133,easy[1]); break;}
-            case MMEDIUM : {Mapply_surface(467,250,265,133,med[1]); break;}
-            case MHARD : {Mapply_surface(800,250,265,133,hard[1]); break;}
-        }
-
-        Mapply_surface(490,450,220,85,play[0]);
-
-        Mapply_surface(20,20,120,66,back_button);
-        SDL_RenderPresent(MRenderer);
-        SDL_Delay(3);
-        *k= (*k+1) % 1360;
-    }
-}
-
 bool showMenu(bool trend)
 {
     MinitSDL();
@@ -439,11 +377,8 @@ bool showMenu(bool trend)
                 pos= Position(e.button.x, e.button.y);
                 switch (pos){
                     case 0: {
-                        if (selectMode(&k)) {
-                            Mix_HaltMusic();
-                            MquitSDL();
-                            return 1;
-                        }
+                        MquitSDL();
+                        return 1;
                         break;
                     }
                     case 1: {

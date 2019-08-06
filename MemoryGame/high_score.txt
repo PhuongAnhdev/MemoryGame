@@ -1,0 +1,6 @@
+ D
+8100 DIN
+100 <no_name>
+0 <no_name>
+0 <no_name>
+0

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
@@ -15,7 +15,7 @@ using namespace std;
 
 const int WIDTH= 1200;
 const int HEIGHT= 680;
-const string TITLE= "Memory Game!!";
+const string TITLE= "Memory Game";
 
 #define fps 45
 #define delay 1000/fps
@@ -41,7 +41,7 @@ Mix_Chunk *bonus, *choose, *click, *combo3, *combo4, *gameover, *match, *tiing, 
 a_card board[10][10];
 bool check[10][10];
 int m,n,sum, total_step, bonsum, step, stage, score;
-int mode,diffi,topic,h_score[6];
+int mode,diffi = 1,topic = 0,h_score[6];
 string h_name[6];
 
 SDL_Texture* loadTexture(string path)
@@ -333,15 +333,26 @@ void showStep()
     apply_surface(1073,50,53,513,bow);
     apply_col(1073,50,37,500,step,total_step,col);
     apply_surface(1058,550,84,84,ball);
-    stepw= loadText(step_f, numToStr(step), SDL_Color {255,0,0});
+	SDL_Color color;
+	
+	color.r = 255;
+	color.g = 0;
+	color.b = 0;
+    stepw= loadText(step_f, numToStr(step), color);
     if (step<10)
         apply_surface(1058+28,550+7,28,70,stepw);
     else
         apply_surface(1058+14,550+7,56,70,stepw);
     //SDL_RenderPresent(Renderer);
-    stagew= loadText(stage_f, numToStr(stage), SDL_Color {0,0,255});
+	color.r = 0;
+	color.g = 0;
+	color.b = 255;
+    stagew= loadText(stage_f, numToStr(stage), color);
     apply_surface(195,590,23,67,stagew);
-    showScore(426,613, SDL_Color {255,255,255});
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+    showScore(426,613, color);
 }
 
 void TransStep(int up)
@@ -371,7 +382,12 @@ void TransStep(int up)
             SDL_RenderCopy(Renderer, col, &length, &offset);
 
             apply_surface(1058,550,84,84,ball);
-            stepw= loadText(step_f, numToStr(step), SDL_Color {255,0,0});
+			SDL_Color color;
+	
+			color.r = 255;
+			color.g = 0;
+			color.b = 0;
+            stepw= loadText(step_f, numToStr(step), color);
             if (step<10)
                 apply_surface(1058+28,550+7,28,70,stepw);
             else
@@ -392,8 +408,13 @@ void TransStep(int up)
         offset.h = length.h;
         SDL_RenderCopy(Renderer, col, &length, &offset);
 
-        apply_surface(1058,550,84,84,ball);
-        stepw= loadText(step_f, numToStr(step), SDL_Color {255,0,0});
+        apply_surface(1058,550,84,84,ball);	
+		SDL_Color color;
+	
+		color.r = 255;
+		color.g = 0;
+		color.b = 0;
+        stepw= loadText(step_f, numToStr(step), color);
         if (step<10)
             apply_surface(1058+28,550+7,28,70,stepw);
         else
@@ -423,42 +444,6 @@ void drawBoard()
     showStep();
 
     //SDL_RenderPresent(Renderer);
-}
-
-void introBoard()
-{
-    apply_surface(0,0,1200,680,ground);
-    SDL_RenderPresent(Renderer);
-    SDL_Delay(100);
-    for (int j=0; j<2; j++){
-        for (int i=0; i<=7; i++){
-            apply_surface(0,0,1200,680,ground);
-            apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
-            SDL_RenderPresent(Renderer);
-            SDL_Delay(24);
-        }
-        for (int i=7; i>=0; i--){
-            apply_surface(0,0,1200,680,ground);
-            apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
-            SDL_RenderPresent(Renderer);
-            SDL_Delay(24);
-        }
-    }
-    for (int i=0; i<=7; i++){
-        apply_surface(0,0,1200,680,ground);
-        apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
-        SDL_RenderPresent(Renderer);
-        SDL_Delay(24);
-    }
-
-    for (int i=0; i<=600; i++){
-        apply_surface(0,0,1200,680,ground);
-        apply_surface(i*2-1200,570,1200,110,header);
-        apply_col(1073-8,250+50-8-500+min(i,250), 53, 513,2*min(i,250),500,bow);
-        apply_surface(1058,300+min(i,250),84,84,ball);
-        SDL_RenderPresent(Renderer);
-        SDL_Delay(4);
-    }
 }
 
 point pos(int xx, int yy)
@@ -645,8 +630,13 @@ string inputName(int Rank)
 {
     Uint32 time, start;
     string name= "";
-    string cs="|";
-    SDL_Texture* csw= loadText(step_f,cs,SDL_Color {0,0,255});
+    string cs="|";	
+	SDL_Color color;
+	
+	color.r = 0;
+	color.g = 0;
+	color.b = 255;
+    SDL_Texture* csw= loadText(step_f,cs, color);
     SDL_Texture* namew;
     int len=0;
     bool up= true;
@@ -662,7 +652,10 @@ string inputName(int Rank)
         if (Rank==5) apply_surface(333,186,533,308,savescore);
         if (stage>8||Rank==0) apply_surface(770,0,337,260,youwin);
         apply_surface(333+533/2-215/2,186+308+10,215,83,done);
-        showScore(265+333,100+186,SDL_Color {255,0,0});
+		color.r = 255;
+		color.g = 0;
+		color.b = 0;
+        showScore(265+333,100+186, color);
         if (SDL_PollEvent(&e)!=0) {
             if (e.type==SDL_KEYDOWN){
                 switch (e.key.keysym.sym) {
@@ -680,8 +673,11 @@ string inputName(int Rank)
                         break;
                     }
                     case SDLK_RETURN : {
-                        if (name.length()>0){
-                            namew= loadText(step_f,name,SDL_Color {0,0,255});
+                        if (name.length()>0){	
+							color.r = 0;
+							color.g = 0;
+							color.b = 255;
+                            namew= loadText(step_f,name,color);
                             apply_surface(50+333,186+227,len,60,namew);
                             if (up) apply_surface(50+333+len,186+220,20,70,csw);
                             apply_surface(333+533/2-215/2,186+308+10,215,83,done_s);
@@ -706,7 +702,10 @@ string inputName(int Rank)
             if (e.type==SDL_MOUSEBUTTONDOWN) {
                 if (e.button.x>=492&&e.button.x<=707&&e.button.y>=504&&e.button.y<=587&&name.length()>0)
                 {
-                    namew= loadText(step_f,name,SDL_Color {0,0,255});
+					color.r = 0;
+					color.g = 0;
+					color.b = 255;
+                    namew= loadText(step_f,name, color);
                     apply_surface(50+333,186+227,len,60,namew);
                     if (up) apply_surface(50+333+len,186+220,20,70,csw);
                     apply_surface(333+533/2-215/2,186+308+10,215,83,done_s);
@@ -716,8 +715,11 @@ string inputName(int Rank)
                 }
             }
         }
-        if (name.length()>0){
-            namew= loadText(step_f,name,SDL_Color {0,0,255});
+        if (name.length()>0){	
+			color.r = 0;
+			color.g = 0;
+			color.b = 255;
+            namew= loadText(step_f,name,color);
             apply_surface(50+333,186+227,len,60,namew);
         }
         time= SDL_GetTicks()-start;
@@ -742,11 +744,7 @@ void gameOver(bool playing)
     }
 
     ifstream fi;
-    switch (diffi) {
-        case 0: {fi.open("high_score_0.txt",ios::in); break;}
-        case 1: {fi.open("high_score_1.txt",ios::in); break;}
-        case 2: {fi.open("high_score_2.txt",ios::in); break;}
-    }
+	fi.open("high_score.txt",ios::in);
 
     for (int i=0; i<5; i++){
         getline(fi,h_name[i]);
@@ -763,12 +761,7 @@ void gameOver(bool playing)
     h_name[Rank]= ' '+inputName(Rank);
 
     ofstream fo;
-
-    switch (diffi) {
-        case 0: {fo.open("high_score_0.txt",ios::out); break;}
-        case 1: {fo.open("high_score_1.txt",ios::out); break;}
-        case 2: {fo.open("high_score_2.txt",ios::out); break;}
-    }
+	fo.open("high_score.txt",ios::out);
     for (int i=0; i<5; i++)
         fo<<h_name[i]<<endl<<h_score[i];
 }
@@ -792,12 +785,6 @@ void nextStage()
         score+=100;
     }
     stage++;
-}
-
-void getGameMode()
-{
-    ifstream fi("game_mode.txt");
-    fi>>diffi>>topic;
 }
 
 bool quitGame()
@@ -872,12 +859,10 @@ void Transound()
 bool Play()
 {
     initSDL();
-    getGameMode();
     int i,j,combo=0;
     stage=1;
     score=0;
     SDL_Event e;
-    introBoard();
     Mix_PlayMusic(beat[rand()%3],-1);
     if (!sound) Mix_PauseMusic();
     Uint32 time, start;
