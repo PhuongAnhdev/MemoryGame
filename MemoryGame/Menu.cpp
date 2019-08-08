@@ -180,7 +180,7 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
         Mapply_surface(1075+i*2,555,100-i*4,100,T1);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        (*k)++;
+        //(*k)++;
     }
 
     if(Mix_PausedMusic()) Mix_ResumeMusic();
@@ -194,7 +194,7 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
         Mapply_surface(1075+i*2,555,100-i*4,100,T2);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        (*k)++;
+        //(*k)++;
     }
 
     Msound=!Msound;
@@ -287,7 +287,7 @@ void showScore(int* k)
         writeScore();
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        *k= (*k+1) % 1360;
+        //*k= (*k+1) % 1360;
     }
 }
 
@@ -315,7 +315,7 @@ void showTutorial(int* k)
         Mapply_surface(20,20,120,66,back_button);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        *k= (*k+1) % 1360;
+        //*k= (*k+1) % 1360;
     }
 }
 
@@ -352,7 +352,7 @@ void showQuit(int *k)
         }
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        *k= (*k+1) % 1360;
+        //*k= (*k+1) % 1360;
     }
 }
 
@@ -382,16 +382,17 @@ bool showMenu(bool trend)
                         break;
                     }
                     case 1: {
-                        showScore(&k);
+                        //showScore(&k);
                         break;
                     }
                     case 2: {
-                        showTutorial(&k);
+                        //showTutorial(&k);
                         break;
                     }
                     case 3: {
-                        showQuit(&k);
-                        break;
+                        //showQuit(&k);
+						exit(0);
+						break;
                     }
                     case 4: {
                         MTransound(&k,Mspeaker[Msound],Mspeaker[!Msound]);
@@ -404,7 +405,7 @@ bool showMenu(bool trend)
         Mapply_surface(1075,555,100,100,Mspeaker[Msound]);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        k= (k+1) % 1360;
+        //k= (k+1) % 1360;
     }
     MquitSDL();
     return 0;

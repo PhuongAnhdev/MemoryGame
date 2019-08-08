@@ -742,7 +742,7 @@ void gameOver(bool playing)
         TransAllBoard();
         SDL_Delay(4100);
     }
-
+	/*
     ifstream fi;
 	fi.open("high_score.txt",ios::in);
 
@@ -764,6 +764,7 @@ void gameOver(bool playing)
 	fo.open("high_score.txt",ios::out);
     for (int i=0; i<5; i++)
         fo<<h_name[i]<<endl<<h_score[i];
+	*/			
 }
 
 void nextStage()
