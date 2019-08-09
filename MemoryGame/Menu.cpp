@@ -12,7 +12,7 @@ using namespace std;
 
 const int WIDTH= 1200;
 const int HEIGHT= 680;
-const string TITLE= "Memory Game!!";
+const string TITLE= "Memory Game";
 
 enum
 {
@@ -28,8 +28,8 @@ enum selection
 SDL_Window* MWindow;
 SDL_Surface* MScreen;
 SDL_Renderer* MRenderer;
-SDL_Texture *Logo, *BG, *BG2, *back_button, *quit, *prePlay;
-SDL_Texture *menu[4][2], *tutor[2], *arrow[2], *Y[2], *N[2], *hscore, *easy[2], *med[2], *hard[2], *play[2];
+SDL_Texture *Logo, *BG, *BG2, *back_button, *quit, *reg, *uet, *prePlay;
+SDL_Texture *menu[4][2], *tutor[2], *arrow[2], *Y[2], *N[2], *hscore[3], *easy[2], *med[2], *hard[2], *play[2];
 SDL_Texture *Mspeaker[2];
 bool status[6]={false}, Msound=1;
 string hc_name[5];
@@ -61,6 +61,11 @@ SDL_Texture* loadText(string text, SDL_Color color)
 
 void MloadImage()
 {
+    reg= MloadTexture("menu/reg.PNG");
+    SDL_SetTextureBlendMode(reg, SDL_BLENDMODE_BLEND);
+    uet= MloadTexture("menu/UET.PNG");
+    SDL_SetTextureBlendMode(uet, SDL_BLENDMODE_BLEND);
+
     Logo= MloadTexture("menu/Game_Logo.PNG");
     BG= MloadTexture("menu/BG.PNG");
     back_button= MloadTexture("menu/back.PNG");
@@ -81,11 +86,19 @@ void MloadImage()
     tutor[1] = MloadTexture("menu/TUTOR2.PNG");
     arrow[0] = MloadTexture("menu/arrow1.PNG");
     arrow[1] = MloadTexture("menu/arrow2.PNG");
-    hscore= MloadTexture("menu/highscore.PNG");
+    hscore[0]= MloadTexture("menu/highscore_0.PNG");
+    hscore[1]= MloadTexture("menu/highscore_1.PNG");
+    hscore[2]= MloadTexture("menu/highscore_2.PNG");
     Y[0]= MloadTexture("menu/YES.PNG");
     Y[1]= MloadTexture("menu/YES_s.PNG");
     N[0]= MloadTexture("menu/NO.PNG");
     N[1]= MloadTexture("menu/NO_s.PNG");
+    easy[0]= MloadTexture("menu/EASY.PNG");
+    easy[1]= MloadTexture("menu/EASY_s.PNG");
+    med[0]= MloadTexture("menu/MEDIUM.PNG");
+    med[1]= MloadTexture("menu/MEDIUM_s.PNG");
+    hard[0]= MloadTexture("menu/HARD.PNG");
+    hard[1]= MloadTexture("menu/HARD_s.PNG");
     play[0]= MloadTexture("menu/playnow.PNG");
     play[1]= MloadTexture("menu/playnow_s.PNG");
 }
@@ -155,8 +168,7 @@ void apply_BG(int x, SDL_Texture* source)
 	off2.y = 0;
 	off2.w = off1.w;
 	off2.h = 680;
-
-	SDL_RenderCopy(MRenderer, source, &off1, &off2);
+    SDL_RenderCopy(MRenderer, source, &off1, &off2);
 }
 
 int Position(int x_, int y_)
@@ -180,7 +192,7 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
         Mapply_surface(1075+i*2,555,100-i*4,100,T1);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //(*k)++;
+        (*k)++;
     }
 
     if(Mix_PausedMusic()) Mix_ResumeMusic();
@@ -194,7 +206,7 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
         Mapply_surface(1075+i*2,555,100-i*4,100,T2);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //(*k)++;
+        (*k)++;
     }
 
     Msound=!Msound;
@@ -219,10 +231,15 @@ string numToSt(int k)
     return s;
 }
 
-void readScore()
+void readScore(int diffi)
 {
     ifstream fi;
-	fi.open("high_score.txt",ios::in);
+    switch (diffi) {
+        case 0: {fi.open("high_score_0.txt",ios::in); break;}
+        case 1: {fi.open("high_score_1.txt",ios::in); break;}
+        case 2: {fi.open("high_score_2.txt",ios::in); break;}
+    }
+
     for (int i=0; i<5; i++){
         getline(fi,hc_name[i]);
         fi>>hc_score[i];
@@ -270,9 +287,11 @@ void writeScore()
 void showScore(int* k)
 {
     Mix_PlayChannel( -1, Mclick, 0 );
+
     int x, y;
+    int recent=0;
     SDL_Event e;
-    readScore();
+    readScore(recent);
     while (true){
         apply_BG(*k,BG);
         if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
@@ -281,13 +300,25 @@ void showScore(int* k)
                 Mix_PlayChannel( -1, Mclick, 0 );
                 return;
             }
+            if (x>=20&&x<=100&&y>=360&&y<=360+55&&recent>0) {
+                Mix_PlayChannel( -1, Mclick, 0 );
+                recent--;
+                readScore(recent);
+            }
+            if (x>=1100&&x<=1180&&y>=360&&y<=360+55&&recent<2) {
+                Mix_PlayChannel( -1, Mclick, 0 );
+                recent++;
+                readScore(recent);
+            }
         }
-        Mapply_surface(20,20,1160,640,hscore);
+        Mapply_surface(20,20,1160,640,hscore[recent]);
         Mapply_surface(20,20,120,66,back_button);
+        if (recent!=0) Mapply_surface(20,360,80,55,arrow[0]);
+        if (recent!=2) Mapply_surface(1100,360,80,55,arrow[1]);
         writeScore();
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //*k= (*k+1) % 1360;
+        *k= (*k+1) % 1360;
     }
 }
 
@@ -315,7 +346,7 @@ void showTutorial(int* k)
         Mapply_surface(20,20,120,66,back_button);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //*k= (*k+1) % 1360;
+        *k= (*k+1) % 1360;
     }
 }
 
@@ -352,7 +383,82 @@ void showQuit(int *k)
         }
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //*k= (*k+1) % 1360;
+        *k= (*k+1) % 1360;
+    }
+}
+
+void intro(SDL_Texture* T)
+{
+    for (int i=0; i<=255; i++)
+    {
+        SDL_RenderClear(MRenderer);
+        SDL_SetTextureAlphaMod(T,i);
+        Mapply_surface(0,0,1200,680,T);
+        SDL_RenderPresent(MRenderer);
+        SDL_Delay(6);
+    }
+    for (int i=255; i>0; i--) {
+        SDL_RenderClear(MRenderer);
+        SDL_SetTextureAlphaMod(T,i);
+        Mapply_surface(0,0,1200,680,T);
+        SDL_RenderPresent(MRenderer);
+        SDL_Delay(2);
+    }
+    SDL_Delay(500);
+}
+
+bool selectMode(int* k)
+{
+    ofstream fo("game_mode.txt");
+    Mix_PlayChannel( -1, Mclick, 0 );
+    int x, y, selection= 0;
+    SDL_Event e;
+    while (true){
+        apply_BG(*k,BG);
+        if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
+            x= e.button.x; y= e.button.y;
+            if (x>=20&&x<=140&&y>=20&&y<=86) { //back
+                Mix_PlayChannel( -1, Mclick, 0 );
+                return 0;
+            }
+            if (x>=135&&x<=400&&y>=250&&y<=383) { //easy
+                Mix_PlayChannel( -1, Mclick, 0 );
+                selection= MEASY;
+            }
+            if (x>=467&&x<=732&&y>=250&&y<=383) { //medium
+                Mix_PlayChannel( -1, Mclick, 0 );
+                selection= MMEDIUM;
+            }
+            if (x>=800&&x<=1065&&y>=250&&y<=383) { //hard
+                Mix_PlayChannel( -1, Mclick, 0 );
+                selection= MHARD;
+            }
+            if (x>=490&&x<=710&&y>=450&&y<=535) { //playnow
+                Mix_PlayChannel( -1, Mclick, 0 );
+                Mapply_surface(490,450,220,85,play[1]);
+                SDL_RenderPresent(MRenderer);
+                SDL_Delay(200);
+                fo<<selection<<' '<<0;
+                return 1;
+            }
+        }
+        Mapply_surface(135,20,930,640,prePlay);
+        Mapply_surface(135,250,265,133,easy[0]);
+        Mapply_surface(467,250,265,133,med[0]);
+        Mapply_surface(800,250,265,133,hard[0]);
+
+        switch (selection) {
+            case MEASY : {Mapply_surface(135,250,265,133,easy[1]); break;}
+            case MMEDIUM : {Mapply_surface(467,250,265,133,med[1]); break;}
+            case MHARD : {Mapply_surface(800,250,265,133,hard[1]); break;}
+        }
+
+        Mapply_surface(490,450,220,85,play[0]);
+
+        Mapply_surface(20,20,120,66,back_button);
+        SDL_RenderPresent(MRenderer);
+        SDL_Delay(3);
+        *k= (*k+1) % 1360;
     }
 }
 
@@ -377,22 +483,24 @@ bool showMenu(bool trend)
                 pos= Position(e.button.x, e.button.y);
                 switch (pos){
                     case 0: {
-                        MquitSDL();
-                        return 1;
+                        if (selectMode(&k)) {
+                            Mix_HaltMusic();
+                            MquitSDL();
+                            return 1;
+                        }
                         break;
                     }
                     case 1: {
-                        //showScore(&k);
+                        showScore(&k);
                         break;
                     }
                     case 2: {
-                        //showTutorial(&k);
+                        showTutorial(&k);
                         break;
                     }
                     case 3: {
-                        //showQuit(&k);
-						exit(0);
-						break;
+                        showQuit(&k);
+                        break;
                     }
                     case 4: {
                         MTransound(&k,Mspeaker[Msound],Mspeaker[!Msound]);
@@ -405,7 +513,7 @@ bool showMenu(bool trend)
         Mapply_surface(1075,555,100,100,Mspeaker[Msound]);
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
-        //k= (k+1) % 1360;
+        k= (k+1) % 1360;
     }
     MquitSDL();
     return 0;

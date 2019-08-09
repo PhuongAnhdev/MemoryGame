@@ -41,7 +41,7 @@ Mix_Chunk *bonus, *choose, *click, *combo3, *combo4, *gameover, *match, *tiing, 
 a_card board[10][10];
 bool check[10][10];
 int m,n,sum, total_step, bonsum, step, stage, score;
-int mode,diffi = 1,topic = 0,h_score[6];
+int mode,diffi,topic,h_score[6];
 string h_name[6];
 
 SDL_Texture* loadTexture(string path)
@@ -327,6 +327,7 @@ void showScore(int x, int y, SDL_Color color)
     apply_surface(650+100,570+55-40,80,80,speaker[sound]);
 }
 
+
 void showStep()
 {
     apply_surface(0,570,1200,110,header);
@@ -426,6 +427,7 @@ void TransStep(int up)
     SDL_RenderPresent(Renderer);
 }
 
+
 void drawBoard()
 {
     //SDL_RenderClear(Renderer);
@@ -444,6 +446,42 @@ void drawBoard()
     showStep();
 
     //SDL_RenderPresent(Renderer);
+}
+
+void introBoard()
+{
+    apply_surface(0,0,1200,680,ground);
+    SDL_RenderPresent(Renderer);
+    SDL_Delay(100);
+    for (int j=0; j<2; j++){
+        for (int i=0; i<=7; i++){
+            apply_surface(0,0,1200,680,ground);
+            apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
+            SDL_RenderPresent(Renderer);
+            SDL_Delay(24);
+        }
+        for (int i=7; i>=0; i--){
+            apply_surface(0,0,1200,680,ground);
+            apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
+            SDL_RenderPresent(Renderer);
+            SDL_Delay(24);
+        }
+    }
+    for (int i=0; i<=7; i++){
+        apply_surface(0,0,1200,680,ground);
+        apply_surface(1058+(7-i)*6, 300,i*12 ,84, ball);
+        SDL_RenderPresent(Renderer);
+        SDL_Delay(24);
+    }
+
+    for (int i=0; i<=600; i++){
+        apply_surface(0,0,1200,680,ground);
+        apply_surface(i*2-1200,570,1200,110,header);
+        apply_col(1073-8,250+50-8-500+min(i,250), 53, 513,2*min(i,250),500,bow);
+        apply_surface(1058,300+min(i,250),84,84,ball);
+        SDL_RenderPresent(Renderer);
+        SDL_Delay(4);
+    }
 }
 
 point pos(int xx, int yy)
@@ -742,9 +780,13 @@ void gameOver(bool playing)
         TransAllBoard();
         SDL_Delay(4100);
     }
-	/*
+
     ifstream fi;
-	fi.open("high_score.txt",ios::in);
+    switch (diffi) {
+        case 0: {fi.open("high_score_0.txt",ios::in); break;}
+        case 1: {fi.open("high_score_1.txt",ios::in); break;}
+        case 2: {fi.open("high_score_2.txt",ios::in); break;}
+    }
 
     for (int i=0; i<5; i++){
         getline(fi,h_name[i]);
@@ -761,10 +803,14 @@ void gameOver(bool playing)
     h_name[Rank]= ' '+inputName(Rank);
 
     ofstream fo;
-	fo.open("high_score.txt",ios::out);
+
+    switch (diffi) {
+        case 0: {fo.open("high_score_0.txt",ios::out); break;}
+        case 1: {fo.open("high_score_1.txt",ios::out); break;}
+        case 2: {fo.open("high_score_2.txt",ios::out); break;}
+    }
     for (int i=0; i<5; i++)
         fo<<h_name[i]<<endl<<h_score[i];
-	*/			
 }
 
 void nextStage()
@@ -786,6 +832,12 @@ void nextStage()
         score+=100;
     }
     stage++;
+}
+
+void getGameMode()
+{
+    ifstream fi("game_mode.txt");
+    fi>>diffi>>topic;
 }
 
 bool quitGame()
@@ -860,10 +912,12 @@ void Transound()
 bool Play()
 {
     initSDL();
+    getGameMode();
     int i,j,combo=0;
     stage=1;
     score=0;
     SDL_Event e;
+    introBoard();
     Mix_PlayMusic(beat[rand()%3],-1);
     if (!sound) Mix_PauseMusic();
     Uint32 time, start;

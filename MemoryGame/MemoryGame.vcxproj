@@ -52,12 +52,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_ttf\SDL2_ttf-2.0.15\include;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_mixer\include;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_image\include;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2\SDL\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Libs\SDL2_ttf\SDL2_ttf-2.0.15\include;$(SolutionDir)\Libs\SDL2_mixer\include;$(SolutionDir)\Libs\SDL2_image\include;$(SolutionDir)\Libs\SDL2\SDL\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2\SDL\lib\x86;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_ttf\SDL2_ttf-2.0.15\lib\x86;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_mixer\lib\x86;C:\Users\duytr\Documents\Visual Studio 2012\Projects\MemoryGame\Libs\SDL2_image\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Libs\SDL2\SDL\lib\x86;$(SolutionDir)\Libs\SDL2_ttf\SDL2_ttf-2.0.15\lib\x86;$(SolutionDir)\Libs\SDL2_mixer\lib\x86;$(SolutionDir)\Libs\SDL2_image\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

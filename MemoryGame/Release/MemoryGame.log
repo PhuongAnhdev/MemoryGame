@@ -1,7 +1,10 @@
-﻿Build started 8/8/2019 9:36:30 PM.
+﻿Build started 8/9/2019 11:49:14 PM.
      1>Project "C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\MemoryGame\MemoryGame.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_ttf\SDL2_ttf-2.0.15\include" /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_mixer\include /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_image\include /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2\SDL\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Play.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_ttf\SDL2_ttf-2.0.15\include" /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_mixer\include /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_image\include /IC:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2\SDL\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp Menu.cpp Play.cpp
+         main.cpp
+     1>main.cpp(12): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+         Menu.cpp
          Play.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\Release\MemoryGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2\SDL\lib\x86 /LIBPATH:"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_ttf\SDL2_ttf-2.0.15\lib\x86" /LIBPATH:C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_mixer\lib\x86 /LIBPATH:C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\\Libs\SDL2_image\lib\x86 SDL2.lib SDL2main.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\Release\MemoryGame.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\duytr\Desktop\GAMELOFT\MemoryGame\Release\MemoryGame.lib" /MACHINE:X86 /SAFESEH Release\main.obj
@@ -14,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.90
+Time Elapsed 00:00:03.83
