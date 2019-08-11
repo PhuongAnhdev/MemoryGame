@@ -186,7 +186,7 @@ void chooseStage(int stage)
         case 7 : {m=6; n=5; bonsum=2; break;}
         case 8 : {m=7; n=6; bonsum=2; break;}
     }
-    total_step=TTstep[diffi][stage] ;
+    total_step=TTstep[stage] ;
 }
 
 void generateBoard()

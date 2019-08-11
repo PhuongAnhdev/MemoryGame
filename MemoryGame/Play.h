@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int TTstep[3][9]= {{0,4,7,9,12,16,22,33,47},{0,3,5,6,8,12,16,25,37},{0,4,7,9,12,16,22,33,47}};
+const int TTstep[9]= {0,3,5,6,8,12,16,25,37};
 
 struct point
 {
