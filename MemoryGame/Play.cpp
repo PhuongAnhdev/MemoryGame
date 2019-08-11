@@ -10,6 +10,8 @@
 #include <SDL_mixer.h>
 
 #include "Play.h"
+#include "Card.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -38,31 +40,11 @@ bool sound=1;
 Mix_Music* beat[3];
 Mix_Chunk *bonus, *choose, *click, *combo3, *combo4, *gameover, *match, *tiing, *wrong, *clap, *tenten;
 
-a_card board[10][10];
+Card board[10][10];
 bool check[10][10];
 int m,n,sum, total_step, bonsum, step, stage, score;
 int mode,diffi,topic,h_score[6];
 string h_name[6];
-
-SDL_Texture* loadTexture(string path)
-{
-    SDL_Texture* newTexture= NULL;
-    SDL_Surface* loadedSurface= IMG_Load(path.c_str());
-    if (loadedSurface==NULL) {cout<<"Error load image\n"; exit(1);}
-    newTexture= SDL_CreateTextureFromSurface(Renderer, loadedSurface);
-    SDL_FreeSurface(loadedSurface);
-    return newTexture;
-}
-
-SDL_Texture* loadText(TTF_Font *font, string text, SDL_Color color)
-{
-    SDL_Texture* newTexture= NULL;
-    SDL_Surface* textSurface= TTF_RenderText_Solid(font, text.c_str(), color);
-    if (textSurface==NULL) {cout<<"Error font\n"; exit(1);}
-    newTexture= SDL_CreateTextureFromSurface(Renderer, textSurface);
-    SDL_FreeSurface(textSurface);
-    return newTexture;
-}
 
 void loadFont()
 {
@@ -73,43 +55,43 @@ void loadFont()
 
 void loadImage()
 {
-    ground= loadTexture("pic/ground.PNG");
-    bow= loadTexture("pic/bow.PNG");
-    col= loadTexture("pic/col.PNG");
-    ball= loadTexture("pic/ball.PNG");
-    header= loadTexture("pic/header.PNG");
-    savescore= loadTexture("pic/save_score.PNG");
-    savehscore= loadTexture("pic/save_hscore.PNG");
-    savebscore= loadTexture("pic/save_bscore.PNG");
-    youwin= loadTexture("pic/youwin.PNG");
-    done= loadTexture("pic/done.PNG");
-    done_s= loadTexture("pic/done_s.PNG");
-    exit_button= loadTexture("pic/exit.PNG");
-    quitgame= loadTexture("pic/quitgame.PNG");
+	ground= loadTexture("pic/ground.PNG", Renderer);
+    bow= loadTexture("pic/bow.PNG", Renderer);
+    col= loadTexture("pic/col.PNG", Renderer);
+    ball= loadTexture("pic/ball.PNG", Renderer);
+    header= loadTexture("pic/header.PNG", Renderer);
+    savescore= loadTexture("pic/save_score.PNG", Renderer);
+    savehscore= loadTexture("pic/save_hscore.PNG", Renderer);
+    savebscore= loadTexture("pic/save_bscore.PNG", Renderer);
+    youwin= loadTexture("pic/youwin.PNG", Renderer);
+    done= loadTexture("pic/done.PNG", Renderer);
+    done_s= loadTexture("pic/done_s.PNG", Renderer);
+    exit_button= loadTexture("pic/exit.PNG", Renderer);
+    quitgame= loadTexture("pic/quitgame.PNG", Renderer);
 
-    speaker[0]= loadTexture("pic/Pmute.PNG");
-    speaker[1]= loadTexture("pic/Pspeaker.PNG");
+    speaker[0]= loadTexture("pic/Pmute.PNG", Renderer);
+    speaker[1]= loadTexture("pic/Pspeaker.PNG", Renderer);
 
-    image[0]= loadTexture("pic/00.PNG");
-    image[1]= loadTexture("pic/01.PNG");
-    image[2]= loadTexture("pic/02.PNG");
-    image[3]= loadTexture("pic/03.PNG");
-    image[4]= loadTexture("pic/04.PNG");
-    image[5]= loadTexture("pic/05.PNG");
-    image[6]= loadTexture("pic/06.PNG");
-    image[7]= loadTexture("pic/07.PNG");
-    image[8]= loadTexture("pic/08.PNG");
-    image[9]= loadTexture("pic/09.PNG");
-    image[10]= loadTexture("pic/10.PNG");
-    image[11]= loadTexture("pic/11.PNG");
-    image[12]= loadTexture("pic/12.PNG");
-    image[13]= loadTexture("pic/13.PNG");
-    image[14]= loadTexture("pic/14.PNG");
-    image[15]= loadTexture("pic/15.PNG");
-    image[16]= loadTexture("pic/16.PNG");
-    image[17] = loadTexture("pic/+1.PNG");
-    image[18] = loadTexture("pic/+2.PNG");
-    image[19] = loadTexture("pic/+3.PNG");
+    image[0]= loadTexture("pic/00.PNG", Renderer);
+    image[1]= loadTexture("pic/01.PNG", Renderer);
+    image[2]= loadTexture("pic/02.PNG", Renderer);
+    image[3]= loadTexture("pic/03.PNG", Renderer);
+    image[4]= loadTexture("pic/04.PNG", Renderer);
+    image[5]= loadTexture("pic/05.PNG", Renderer);
+    image[6]= loadTexture("pic/06.PNG", Renderer);
+    image[7]= loadTexture("pic/07.PNG", Renderer);
+    image[8]= loadTexture("pic/08.PNG", Renderer);
+    image[9]= loadTexture("pic/09.PNG", Renderer);
+    image[10]= loadTexture("pic/10.PNG", Renderer);
+    image[11]= loadTexture("pic/11.PNG", Renderer);
+    image[12]= loadTexture("pic/12.PNG", Renderer);
+    image[13]= loadTexture("pic/13.PNG", Renderer);
+    image[14]= loadTexture("pic/14.PNG", Renderer);
+    image[15]= loadTexture("pic/15.PNG", Renderer);
+    image[16]= loadTexture("pic/16.PNG", Renderer);
+    image[17] = loadTexture("pic/+1.PNG", Renderer);
+    image[18] = loadTexture("pic/+2.PNG", Renderer);
+    image[19] = loadTexture("pic/+3.PNG", Renderer);
 }
 
 void loadTrack()
@@ -221,7 +203,7 @@ void generateBoard()
     memset(numed, false, sizeof(numed));
     for (int i=0; i<=m; i++)
         for (int j=0; j<=n; j++)
-            board[i][j].gotten= false;
+			board[i][j] = Card();
     numed[num]= true;
     check[_i][_j]= true;
 
@@ -234,15 +216,15 @@ void generateBoard()
             _j= rand()%n+1;
         }
         check[_i][_j]= true;
-        board[_i][_j].number= num;
-        board[_i][_j].upface= 0;
+        board[_i][_j].set_number(num);
+        board[_i][_j].un_upface();
         while(check[_i][_j]){
             _i= rand()%m+1;
             _j= rand()%n+1;
         }
         check[_i][_j]= true;
-        board[_i][_j].number= num;
-        board[_i][_j].upface= 0;
+        board[_i][_j].set_number(num);
+        board[_i][_j].un_upface();
     }
 
     if (m*n<9) return;
@@ -254,8 +236,8 @@ void generateBoard()
         _j= rand()%n+1;
     }
     check[_i][_j]= true;
-    board[_i][_j].number= (m*n<=20)? 17 : 18;
-    board[_i][_j].upface= 0;
+	board[_i][_j].set_number((m*n<=20)? 17 : 18);
+    board[_i][_j].un_upface();
 
     if (m*n==9) return;
 
@@ -266,9 +248,9 @@ void generateBoard()
         _j= rand()%n+1;
     }
     check[_i][_j]= true;
-    board[_i][_j].number= (m*n<=30)? 18 : 19;
-    board[_i][_j].upface= 0;
-    if (m*n<20) board[_i][_j].number=17;
+    board[_i][_j].set_number((m*n<=30)? 18 : 19);
+    board[_i][_j].un_upface();
+    if (m*n<20) board[_i][_j].set_number(17);
 
     if (m*n<42) return;
 
@@ -282,36 +264,17 @@ void generateBoard()
             _j= rand()%n+1;
         }
         check[_i][_j]= true;
-        board[_i][_j].number= num;
-        board[_i][_j].upface= 0;
+        board[_i][_j].set_number(num);
+        board[_i][_j].un_upface();
         while(check[_i][_j]){
             _i= rand()%m+1;
             _j= rand()%n+1;
         }
         check[_i][_j]= true;
-        board[_i][_j].number= num;
-        board[_i][_j].upface= 0;
+        board[_i][_j].set_number(num);
+        board[_i][_j].un_upface();
     }
 
-}
-
-string numToStr(int k)
-{
-    string s="";
-    if (k==0) return "0";
-    char x;
-    int i=0;
-    while (k>0){
-        x= (k%10)+48;
-        s= x+s;
-        i++;
-        if (i==3) {
-            if (k>9) s=','+s;
-            i=0;
-        }
-        k/=10;
-    }
-    return s;
 }
 
 void showScore(int x, int y, SDL_Color color)
@@ -320,7 +283,7 @@ void showScore(int x, int y, SDL_Color color)
     int k=1;
     while (score/k>0) {k*=10;i++;}
     if (score==0) i=1;
-    scorew= loadText(score_f, numToStr(score), color);
+    scorew= loadText(score_f, numToStr(score), color, Renderer);
     apply_surface(x-13*(i-1),y,24*i,51,scorew);
 
     apply_surface(650,570+55-40,80,80,exit_button);
@@ -339,7 +302,7 @@ void showStep()
 	color.r = 255;
 	color.g = 0;
 	color.b = 0;
-    stepw= loadText(step_f, numToStr(step), color);
+    stepw= loadText(step_f, numToStr(step), color, Renderer);
     if (step<10)
         apply_surface(1058+28,550+7,28,70,stepw);
     else
@@ -348,7 +311,7 @@ void showStep()
 	color.r = 0;
 	color.g = 0;
 	color.b = 255;
-    stagew= loadText(stage_f, numToStr(stage), color);
+    stagew= loadText(stage_f, numToStr(stage), color, Renderer);
     apply_surface(195,590,23,67,stagew);
 	color.r = 255;
 	color.g = 255;
@@ -388,7 +351,7 @@ void TransStep(int up)
 			color.r = 255;
 			color.g = 0;
 			color.b = 0;
-            stepw= loadText(step_f, numToStr(step), color);
+            stepw= loadText(step_f, numToStr(step), color, Renderer);
             if (step<10)
                 apply_surface(1058+28,550+7,28,70,stepw);
             else
@@ -415,7 +378,7 @@ void TransStep(int up)
 		color.r = 255;
 		color.g = 0;
 		color.b = 0;
-        stepw= loadText(step_f, numToStr(step), color);
+        stepw= loadText(step_f, numToStr(step), color, Renderer);
         if (step<10)
             apply_surface(1058+28,550+7,28,70,stepw);
         else
@@ -436,9 +399,9 @@ void drawBoard()
     //apply_surface(20,515,)
     for (int i=1; i<=m; i++)
         for (int j=1; j<=n; j++){
-            if (board[i][j].gotten) continue;
-            if (board[i][j].upface)
-                apply_surface(corner.x+(i-1)*90, corner.y+(j-1)*90, 80, 80, image[board[i][j].number]);
+            if (board[i][j].is_gotten()) continue;
+            if (board[i][j].is_upface())
+                apply_surface(corner.x+(i-1)*90, corner.y+(j-1)*90, 80, 80, image[board[i][j].get_number()]);
             else
                 apply_surface(corner.x+(i-1)*90, corner.y+(j-1)*90, 80, 80, image[0]);
         }
@@ -502,7 +465,7 @@ void Trans1card(SDL_Texture* T, int xx, int yy)
     point p;
     p.x= corner.x + (xx-1)*90;
     p.y= corner.y + (yy-1)*90;
-    board[xx][yy].gotten= true;
+    board[xx][yy].do_gotten();
     for (int i=0; i<=5; i++) {
         drawBoard();
         apply_surface(p.x+i*8,p.y,80-i*16,80,image[0]);
@@ -515,8 +478,8 @@ void Trans1card(SDL_Texture* T, int xx, int yy)
         SDL_RenderPresent(Renderer);
         SDL_Delay(delay-2);
     }
-    board[xx][yy].upface= 1;
-    board[xx][yy].gotten= false;
+    board[xx][yy].do_upface();
+    board[xx][yy].un_gotten();
 }
 
 void swap2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j2)
@@ -526,8 +489,8 @@ void swap2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j2
     p1.y= corner.y+(j1-1)*90;
     p2.x= corner.x+(i2-1)*90;
     p2.y= corner.y+(j2-1)*90;
-    board[i1][j1].gotten= true;
-    board[i2][j2].gotten= true;
+    board[i1][j1].do_gotten();
+    board[i2][j2].do_gotten();
     if (abs(p1.x-p2.x)>=abs(p1.y-p2.y)) {
         for (int i=0; i<=abs(p1.x-p2.x); i++) {
             drawBoard();
@@ -546,11 +509,11 @@ void swap2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j2
             SDL_Delay(3);
         }
     }
-    a_card tmp= board[i1][j1];
+    Card tmp= board[i1][j1];
     board[i1][j1] = board[i2][j2];
     board[i2][j2]= tmp;
-    board[i1][j1].gotten= false;
-    board[i2][j2].gotten= false;
+    board[i1][j1].un_gotten();
+    board[i2][j2].un_gotten();
 }
 
 void Trans2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j2)
@@ -560,8 +523,8 @@ void Trans2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j
     p1.y= corner.y+(j1-1)*90;
     p2.x= corner.x+(i2-1)*90;
     p2.y= corner.y+(j2-1)*90;
-    board[i1][j1].gotten= true;
-    board[i2][j2].gotten= true;
+    board[i1][j1].do_gotten();
+    board[i2][j2].do_gotten();
     for (int i=0; i<=5; i++) {
         drawBoard();
         apply_surface(p1.x+i*8,p1.y,80-i*16,80,T1);
@@ -576,10 +539,10 @@ void Trans2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j
         SDL_RenderPresent(Renderer);
         SDL_Delay(delay-2);
     }
-    board[i1][j1].upface= 0;
-    board[i2][j2].upface= 0;
-    board[i1][j1].gotten= false;
-    board[i2][j2].gotten= false;
+    board[i1][j1].un_upface();
+    board[i2][j2].un_upface();
+    board[i1][j1].un_gotten();
+    board[i2][j2].un_gotten();
 }
 
 void DisappBonus(SDL_Texture* T1, int i1, int j1)
@@ -587,14 +550,14 @@ void DisappBonus(SDL_Texture* T1, int i1, int j1)
     point p1;
     p1.x= corner.x+(i1-1)*90;
     p1.y= corner.y+(j1-1)*90;
-    board[i1][j1].gotten= true;
+    board[i1][j1].do_gotten();
     for (int i=0; i<=5; i++) {
         drawBoard();
         apply_surface(p1.x+i*8,p1.y+i*8,80-i*16,80-i*16,T1);
         SDL_RenderPresent(Renderer);
         SDL_Delay(delay-2);
     }
-    board[i1][j1].upface= 0;
+    board[i1][j1].un_upface();
 }
 
 void Disapp2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int j2)
@@ -604,8 +567,8 @@ void Disapp2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int 
     p1.y= corner.y+(j1-1)*90;
     p2.x= corner.x+(i2-1)*90;
     p2.y= corner.y+(j2-1)*90;
-    board[i1][j1].gotten= true;
-    board[i2][j2].gotten= true;
+    board[i1][j1].do_gotten();
+    board[i2][j2].do_gotten();
     for (int i=0; i<=5; i++) {
         drawBoard();
         apply_surface(p1.x+i*8,p1.y+i*8,80-i*16,80-i*16,T1);
@@ -613,8 +576,8 @@ void Disapp2cards(SDL_Texture* T1, int i1, int j1, SDL_Texture* T2, int i2, int 
         SDL_RenderPresent(Renderer);
         SDL_Delay(delay-2);
     }
-    board[i1][j1].upface= 0;
-    board[i2][j2].upface= 0;
+    board[i1][j1].un_upface();
+    board[i2][j2].un_upface();
     sum-=2;
 }
 
@@ -625,15 +588,15 @@ int TransAllBoard()
 
     for (int i=0; i<=m; i++)
         for (int j=0; j<=n; j++)
-            if (!board[i][j].gotten&&board[i][j].number>=16&&board[i][j].number<=18) dem++;
+            if (!board[i][j].is_gotten()&&board[i][j].get_number()>=16&&board[i][j].get_number()<=18) dem++;
     for (int i=0; i<=5; i++) {
         apply_surface(0,0,WIDTH,HEIGHT,ground);
         for (xx=1; xx<=m; xx++)
             for (yy=1; yy<=n; yy++ )
-                if (!board[xx][yy].gotten) {
+                if (!board[xx][yy].is_gotten()) {
                     p.x= corner.x+(xx-1)*90;
                     p.y= corner.y+(yy-1)*90;
-                    if (board[xx][yy].upface) {apply_surface(p.x,p.y,80,80,image[board[xx][yy].number]); continue;}
+                    if (board[xx][yy].is_upface()) {apply_surface(p.x,p.y,80,80,image[board[xx][yy].get_number()]); continue;}
                     apply_surface(p.x+i*8,p.y,80-i*16,80,image[0]);
                 }
         showStep();
@@ -644,11 +607,11 @@ int TransAllBoard()
         apply_surface(0,0,WIDTH,HEIGHT,ground);
         for (xx=1; xx<=m; xx++)
             for (yy=1; yy<=n; yy++ )
-                if (!board[xx][yy].gotten) {
+                if (!board[xx][yy].is_gotten()) {
                     p.x= corner.x+(xx-1)*90;
                     p.y= corner.y+(yy-1)*90;
-                    if (board[xx][yy].upface) {apply_surface(p.x,p.y,80,80,image[board[xx][yy].number]); continue;}
-                    apply_surface(p.x+i*8,p.y,80-i*16,80,image[board[xx][yy].number]);
+                    if (board[xx][yy].is_upface()) {apply_surface(p.x,p.y,80,80,image[board[xx][yy].get_number()]); continue;}
+                    apply_surface(p.x+i*8,p.y,80-i*16,80,image[board[xx][yy].get_number()]);
                 }
         showStep();
         SDL_RenderPresent(Renderer);
@@ -674,7 +637,7 @@ string inputName(int Rank)
 	color.r = 0;
 	color.g = 0;
 	color.b = 255;
-    SDL_Texture* csw= loadText(step_f,cs, color);
+    SDL_Texture* csw= loadText(step_f,cs, color, Renderer);
     SDL_Texture* namew;
     int len=0;
     bool up= true;
@@ -715,7 +678,7 @@ string inputName(int Rank)
 							color.r = 0;
 							color.g = 0;
 							color.b = 255;
-                            namew= loadText(step_f,name,color);
+                            namew= loadText(step_f,name,color, Renderer);
                             apply_surface(50+333,186+227,len,60,namew);
                             if (up) apply_surface(50+333+len,186+220,20,70,csw);
                             apply_surface(333+533/2-215/2,186+308+10,215,83,done_s);
@@ -743,7 +706,7 @@ string inputName(int Rank)
 					color.r = 0;
 					color.g = 0;
 					color.b = 255;
-                    namew= loadText(step_f,name, color);
+                    namew= loadText(step_f,name, color, Renderer);
                     apply_surface(50+333,186+227,len,60,namew);
                     if (up) apply_surface(50+333+len,186+220,20,70,csw);
                     apply_surface(333+533/2-215/2,186+308+10,215,83,done_s);
@@ -757,7 +720,7 @@ string inputName(int Rank)
 			color.r = 0;
 			color.g = 0;
 			color.b = 255;
-            namew= loadText(step_f,name,color);
+            namew= loadText(step_f,name,color, Renderer);
             apply_surface(50+333,186+227,len,60,namew);
         }
         time= SDL_GetTicks()-start;
@@ -863,9 +826,9 @@ bool quitGame()
 void tBonus(int i, int j)
 {
     SDL_Delay(delay*15);
-    DisappBonus(image[board[i][j].number],i,j);
+    DisappBonus(image[board[i][j].get_number()],i,j);
     bonsum--;
-    step+= board[i][j].number-16;
+    step+= board[i][j].get_number()-16;
     if (total_step<step) {
         total_step= max(step, total_step);
         showStep();
@@ -873,28 +836,28 @@ void tBonus(int i, int j)
     }
     else {
         total_step= max(step, total_step);
-        TransStep(board[i][j].number-16);
+        TransStep(board[i][j].get_number()-16);
     }
 }
 
 void wrongChoice(int i1, int j1, int i2, int j2)
 {
     if (diffi==HARD){
-        swap2cards(image[board[i1][j1].number], i1 , j1,
-                   image[board[i2][j2].number], i2 , j2);
+        swap2cards(image[board[i1][j1].get_number()], i1 , j1,
+                   image[board[i2][j2].get_number()], i2 , j2);
         SDL_Delay(400);
     }
 
-    Trans2cards(image[board[i1][j1].number], i1 , j1,
-                image[board[i2][j2].number], i2 , j2);
+    Trans2cards(image[board[i1][j1].get_number()], i1 , j1,
+                image[board[i2][j2].get_number()], i2 , j2);
 }
 
 void matchChoice(int i1, int j1, int i2, int j2)
 {
     score+=100;
 
-    Disapp2cards(image[board[i1][j1].number], i1 , j1,
-                image[board[i2][j2].number], i2 , j2);
+    Disapp2cards(image[board[i1][j1].get_number()], i1 , j1,
+                image[board[i2][j2].get_number()], i2 , j2);
 }
 
 void Transound()
@@ -958,12 +921,12 @@ bool Play()
                 if (p[cnt].x==-1) continue; //click outside
 
                 i= p[cnt].x; j= p[cnt].y;
-                if (board[i][j].gotten || board[i][j].upface) continue; //wrong click
+                if (board[i][j].is_gotten() || board[i][j].is_upface()) continue; //wrong click
 
                 if (!cnt) Mix_PlayChannel( -1, choose, 0 );
-                Trans1card(image[board[i][j].number], i, j);
+                Trans1card(image[board[i][j].get_number()], i, j);
 
-                if (board[i][j].number>=17&&board[i][j].number<=19) {
+                if (board[i][j].get_number()>=17&&board[i][j].get_number()<=19) {
                     Mix_PlayChannel( -1, bonus, 0 );
                     tBonus(i,j);
                     continue;
@@ -974,7 +937,7 @@ bool Play()
                     step--;
                     start= SDL_GetTicks();
                     TransStep(-1);
-                    if (board[p[1].x][p[1].y].number != board[p[0].x][p[0].y].number){
+                    if (board[p[1].x][p[1].y].get_number() != board[p[0].x][p[0].y].get_number()){
                         Mix_PlayChannel( -1, wrong, 0 );
                         if (step==0&&sum>0) {
                             gameOver(1);

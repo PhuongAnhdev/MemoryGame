@@ -7,6 +7,7 @@
 #include <SDL_mixer.h>
 
 #include "Menu.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ enum selection
 
 SDL_Window* MWindow;
 SDL_Surface* MScreen;
-SDL_Renderer* MRenderer;
+SDL_Renderer * MRenderer;
 SDL_Texture *Logo, *BG, *BG2, *back_button, *quit, *reg, *uet, *prePlay;
 SDL_Texture *menu[4][2], *tutor[2], *arrow[2], *Y[2], *N[2], *hscore[3], *easy[2], *med[2], *hard[2], *play[2];
 SDL_Texture *Mspeaker[2];
@@ -39,68 +40,48 @@ TTF_Font* font;
 Mix_Music* menu_beat;
 Mix_Chunk* Mclick;
 
-SDL_Texture* MloadTexture(string path)
-{
-    SDL_Texture* newTexture= NULL;
-    SDL_Surface* loadedSurface= IMG_Load(path.c_str());
-    if (loadedSurface==NULL) {cout<<"Error load image\n"; exit(1);}
-    newTexture= SDL_CreateTextureFromSurface(MRenderer, loadedSurface);
-    SDL_FreeSurface(loadedSurface);
-    return newTexture;
-}
-
-SDL_Texture* loadText(string text, SDL_Color color)
-{
-    SDL_Texture* newTexture= NULL;
-    SDL_Surface* textSurface= TTF_RenderText_Blended(font, text.c_str(), color);
-    if (textSurface==NULL) {cout<<"Error font\n"; exit(1);}
-    newTexture= SDL_CreateTextureFromSurface(MRenderer, textSurface);
-    SDL_FreeSurface(textSurface);
-    return newTexture;
-}
-
 void MloadImage()
 {
-    reg= MloadTexture("menu/reg.PNG");
+    reg= loadTexture("menu/reg.PNG", MRenderer);
     SDL_SetTextureBlendMode(reg, SDL_BLENDMODE_BLEND);
-    uet= MloadTexture("menu/UET.PNG");
+    uet= loadTexture("menu/UET.PNG", MRenderer);
     SDL_SetTextureBlendMode(uet, SDL_BLENDMODE_BLEND);
 
-    Logo= MloadTexture("menu/Game_Logo.PNG");
-    BG= MloadTexture("menu/BG.PNG");
-    back_button= MloadTexture("menu/back.PNG");
-    quit= MloadTexture("menu/quit.PNG");
-    prePlay= MloadTexture("menu/game_mode.PNG");
+    Logo= loadTexture("menu/Game_Logo.PNG", MRenderer);
+    BG= loadTexture("menu/BG.PNG", MRenderer);
+    back_button= loadTexture("menu/back.PNG", MRenderer);
+    quit= loadTexture("menu/quit.PNG", MRenderer);
+    prePlay= loadTexture("menu/game_mode.PNG", MRenderer);
 
-    menu[0][0]= MloadTexture("menu/PLAY.PNG");
-    menu[0][1]= MloadTexture("menu/PLAY_s.PNG");
-    menu[1][0]= MloadTexture("menu/SCORE.PNG");
-    menu[1][1]= MloadTexture("menu/SCORE_s.PNG");
-    menu[2][0]= MloadTexture("menu/HELP.PNG");
-    menu[2][1]= MloadTexture("menu/HELP_s.PNG");
-    menu[3][0]= MloadTexture("menu/EXIT.PNG");
-    menu[3][1]= MloadTexture("menu/EXIT_s.PNG");
-    Mspeaker[0]= MloadTexture("menu/mute.PNG");
-    Mspeaker[1]= MloadTexture("menu/speaker.PNG");
-    tutor[0] = MloadTexture("menu/TUTOR1.PNG");
-    tutor[1] = MloadTexture("menu/TUTOR2.PNG");
-    arrow[0] = MloadTexture("menu/arrow1.PNG");
-    arrow[1] = MloadTexture("menu/arrow2.PNG");
-    hscore[0]= MloadTexture("menu/highscore_0.PNG");
-    hscore[1]= MloadTexture("menu/highscore_1.PNG");
-    hscore[2]= MloadTexture("menu/highscore_2.PNG");
-    Y[0]= MloadTexture("menu/YES.PNG");
-    Y[1]= MloadTexture("menu/YES_s.PNG");
-    N[0]= MloadTexture("menu/NO.PNG");
-    N[1]= MloadTexture("menu/NO_s.PNG");
-    easy[0]= MloadTexture("menu/EASY.PNG");
-    easy[1]= MloadTexture("menu/EASY_s.PNG");
-    med[0]= MloadTexture("menu/MEDIUM.PNG");
-    med[1]= MloadTexture("menu/MEDIUM_s.PNG");
-    hard[0]= MloadTexture("menu/HARD.PNG");
-    hard[1]= MloadTexture("menu/HARD_s.PNG");
-    play[0]= MloadTexture("menu/playnow.PNG");
-    play[1]= MloadTexture("menu/playnow_s.PNG");
+    menu[0][0]= loadTexture("menu/PLAY.PNG", MRenderer);
+    menu[0][1]= loadTexture("menu/PLAY_s.PNG", MRenderer);
+    menu[1][0]= loadTexture("menu/SCORE.PNG", MRenderer);
+    menu[1][1]= loadTexture("menu/SCORE_s.PNG", MRenderer);
+    menu[2][0]= loadTexture("menu/HELP.PNG", MRenderer);
+    menu[2][1]= loadTexture("menu/HELP_s.PNG", MRenderer);
+    menu[3][0]= loadTexture("menu/EXIT.PNG", MRenderer);
+    menu[3][1]= loadTexture("menu/EXIT_s.PNG", MRenderer);
+    Mspeaker[0]= loadTexture("menu/mute.PNG", MRenderer);
+    Mspeaker[1]= loadTexture("menu/speaker.PNG", MRenderer);
+    tutor[0] = loadTexture("menu/TUTOR1.PNG", MRenderer);
+    tutor[1] = loadTexture("menu/TUTOR2.PNG", MRenderer);
+    arrow[0] = loadTexture("menu/arrow1.PNG", MRenderer);
+    arrow[1] = loadTexture("menu/arrow2.PNG", MRenderer);
+    hscore[0]= loadTexture("menu/highscore_0.PNG", MRenderer);
+    hscore[1]= loadTexture("menu/highscore_1.PNG", MRenderer);
+    hscore[2]= loadTexture("menu/highscore_2.PNG", MRenderer);
+    Y[0]= loadTexture("menu/YES.PNG", MRenderer);
+    Y[1]= loadTexture("menu/YES_s.PNG", MRenderer);
+    N[0]= loadTexture("menu/NO.PNG", MRenderer);
+    N[1]= loadTexture("menu/NO_s.PNG", MRenderer);
+    easy[0]= loadTexture("menu/EASY.PNG", MRenderer);
+    easy[1]= loadTexture("menu/EASY_s.PNG", MRenderer);
+    med[0]= loadTexture("menu/MEDIUM.PNG", MRenderer);
+    med[1]= loadTexture("menu/MEDIUM_s.PNG", MRenderer);
+    hard[0]= loadTexture("menu/HARD.PNG", MRenderer);
+    hard[1]= loadTexture("menu/HARD_s.PNG", MRenderer);
+    play[0]= loadTexture("menu/playnow.PNG", MRenderer);
+    play[1]= loadTexture("menu/playnow_s.PNG", MRenderer);
 }
 
 void MloadTrack()
@@ -212,25 +193,6 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
     Msound=!Msound;
 }
 
-string numToSt(int k)
-{
-    string s="";
-    if (k==0) return "0";
-    char x;
-    int i=0;
-    while (k>0){
-        x= (k%10)+48;
-        s= x+s;
-        i++;
-        if (i==3) {
-            if (k>9) s=','+s;
-            i=0;
-        }
-        k/=10;
-    }
-    return s;
-}
-
 void readScore(int diffi)
 {
     ifstream fi;
@@ -249,34 +211,34 @@ void readScore(int diffi)
 	color.g = 240;
 	color.b = 0;
 	
-    hnamew[0]= loadText(hc_name[0], color);
-    hscorew[0]= loadText(numToSt(hc_score[0]), color);
+    hnamew[0]= loadText(font, hc_name[0], color, MRenderer);
+    hscorew[0]= loadText(font, numToStr(hc_score[0]), color, MRenderer);
 	
 	color.r = 126;
 	color.g = 102;
 	color.b = 102;
-    hnamew[1]= loadText(hc_name[1], color);
-    hscorew[1]= loadText(numToSt(hc_score[1]), color);
+    hnamew[1]= loadText(font, hc_name[1], color, MRenderer);
+    hscorew[1]= loadText(font, numToStr(hc_score[1]), color, MRenderer);
 	
 	color.r = 139;
 	color.g = 57;
 	color.b = 7;
-	hnamew[2]= loadText(hc_name[2], color);
-    hscorew[2]= loadText(numToSt(hc_score[2]), color);
+	hnamew[2]= loadText(font, hc_name[2], color, MRenderer);
+    hscorew[2]= loadText(font, numToStr(hc_score[2]), color, MRenderer);
 
 	color.r = 22;
 	color.g = 168;
 	color.b = 22;
-    hnamew[3]= loadText(hc_name[3], color);
-    hscorew[3]= loadText(numToSt(hc_score[3]), color);
-    hnamew[4]= loadText(hc_name[4], color);
-    hscorew[4]= loadText(numToSt(hc_score[4]), color);
+    hnamew[3]= loadText(font, hc_name[3], color, MRenderer);
+    hscorew[3]= loadText(font, numToStr(hc_score[3]), color, MRenderer);
+    hnamew[4]= loadText(font, hc_name[4], color, MRenderer);
+    hscorew[4]= loadText(font, numToStr(hc_score[4]), color, MRenderer);
 }
 
 void writeScore()
 {
     int l[5];
-    for (int i=0; i<5; i++) l[i]= numToSt(hc_score[i]).length();
+    for (int i=0; i<5; i++) l[i]= numToStr(hc_score[i]).length();
 
     for (int i=0; i<5; i++){
         Mapply_surface(478,245+i*87,hc_name[i].length()*20,40,hnamew[i]);
