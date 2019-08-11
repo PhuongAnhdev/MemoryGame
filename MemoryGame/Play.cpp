@@ -745,12 +745,7 @@ void gameOver(bool playing)
     }
 
     ifstream fi;
-    switch (diffi) {
-        case 0: {fi.open("high_score_0.txt",ios::in); break;}
-        case 1: {fi.open("high_score_1.txt",ios::in); break;}
-        case 2: {fi.open("high_score_2.txt",ios::in); break;}
-    }
-
+    fi.open("high_score.txt",ios::in);
     for (int i=0; i<5; i++){
         getline(fi,h_name[i]);
         fi>>h_score[i];
@@ -766,12 +761,7 @@ void gameOver(bool playing)
     h_name[Rank]= ' '+inputName(Rank);
 
     ofstream fo;
-
-    switch (diffi) {
-        case 0: {fo.open("high_score_0.txt",ios::out); break;}
-        case 1: {fo.open("high_score_1.txt",ios::out); break;}
-        case 2: {fo.open("high_score_2.txt",ios::out); break;}
-    }
+	fo.open("high_score.txt",ios::out);
     for (int i=0; i<5; i++)
         fo<<h_name[i]<<endl<<h_score[i];
 }
@@ -795,12 +785,6 @@ void nextStage()
         score+=100;
     }
     stage++;
-}
-
-void getGameMode()
-{
-    ifstream fi("game_mode.txt");
-    fi>>diffi>>topic;
 }
 
 bool quitGame()
@@ -875,7 +859,8 @@ void Transound()
 bool Play()
 {
     initSDL();
-    getGameMode();
+	diffi = 1;
+	topic = 0;
     int i,j,combo=0;
     stage=1;
     score=0;

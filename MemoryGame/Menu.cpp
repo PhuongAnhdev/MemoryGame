@@ -70,9 +70,9 @@ void MloadImage()
     tutor[1] = loadTexture("menu/TUTOR2.PNG", MRenderer);
     arrow[0] = loadTexture("menu/arrow1.PNG", MRenderer);
     arrow[1] = loadTexture("menu/arrow2.PNG", MRenderer);
-    hscore[0]= loadTexture("menu/highscore_0.PNG", MRenderer);
-    hscore[1]= loadTexture("menu/highscore_1.PNG", MRenderer);
-    hscore[2]= loadTexture("menu/highscore_2.PNG", MRenderer);
+    hscore[0]= loadTexture("menu/highscore.PNG", MRenderer);
+    hscore[1]= loadTexture("menu/highscore.PNG", MRenderer);
+    hscore[2]= loadTexture("menu/highscore.PNG", MRenderer);
     Y[0]= loadTexture("menu/YES.PNG", MRenderer);
     Y[1]= loadTexture("menu/YES_s.PNG", MRenderer);
     N[0]= loadTexture("menu/NO.PNG", MRenderer);
@@ -199,11 +199,7 @@ void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
 void readScore(int diffi)
 {
     ifstream fi;
-    switch (diffi) {
-        case 0: {fi.open("high_score_0.txt",ios::in); break;}
-        case 1: {fi.open("high_score_1.txt",ios::in); break;}
-        case 2: {fi.open("high_score_2.txt",ios::in); break;}
-    }
+	fi.open("high_score.txt",ios::in);
 
     for (int i=0; i<5; i++){
         getline(fi,hc_name[i]);
@@ -254,9 +250,9 @@ void showScore(int* k)
     Mix_PlayChannel( -1, Mclick, 0 );
 
     int x, y;
-    int recent=0;
+    int recent=1;
     SDL_Event e;
-    readScore(recent);
+    readScore(1);
     while (true){
         apply_BG(*k,BG);
         if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
@@ -265,21 +261,9 @@ void showScore(int* k)
                 Mix_PlayChannel( -1, Mclick, 0 );
                 return;
             }
-            if (x>=20&&x<=100&&y>=360&&y<=360+55&&recent>0) {
-                Mix_PlayChannel( -1, Mclick, 0 );
-                recent--;
-                readScore(recent);
-            }
-            if (x>=1100&&x<=1180&&y>=360&&y<=360+55&&recent<2) {
-                Mix_PlayChannel( -1, Mclick, 0 );
-                recent++;
-                readScore(recent);
-            }
         }
         Mapply_surface(20,20,1160,640,hscore[recent]);
         Mapply_surface(20,20,120,66,back_button);
-        if (recent!=0) Mapply_surface(20,360,80,55,arrow[0]);
-        if (recent!=2) Mapply_surface(1100,360,80,55,arrow[1]);
         writeScore();
         SDL_RenderPresent(MRenderer);
         SDL_Delay(3);
@@ -372,62 +356,6 @@ void intro(SDL_Texture* T)
     SDL_Delay(500);
 }
 
-bool selectMode(int* k)
-{
-    ofstream fo("game_mode.txt");
-    Mix_PlayChannel( -1, Mclick, 0 );
-    int x, y, selection= 0;
-    SDL_Event e;
-    while (true){
-        apply_BG(*k,BG);
-        if (SDL_PollEvent(&e)!=0&&e.type==SDL_MOUSEBUTTONDOWN){
-            x= e.button.x; y= e.button.y;
-            if (x>=20&&x<=140&&y>=20&&y<=86) { //back
-                Mix_PlayChannel( -1, Mclick, 0 );
-                return 0;
-            }
-            if (x>=135&&x<=400&&y>=250&&y<=383) { //easy
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MEASY;
-            }
-            if (x>=467&&x<=732&&y>=250&&y<=383) { //medium
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MMEDIUM;
-            }
-            if (x>=800&&x<=1065&&y>=250&&y<=383) { //hard
-                Mix_PlayChannel( -1, Mclick, 0 );
-                selection= MHARD;
-            }
-            if (x>=490&&x<=710&&y>=450&&y<=535) { //playnow
-                Mix_PlayChannel( -1, Mclick, 0 );
-                Mapply_surface(490,450,220,85,play[1]);
-                SDL_RenderPresent(MRenderer);
-                SDL_Delay(200);
-                fo<<selection<<' '<<0;
-                return 1;
-            }
-        }
-        Mapply_surface(135,20,930,640,prePlay);
-        Mapply_surface(135,250,265,133,easy[0]);
-        Mapply_surface(467,250,265,133,med[0]);
-        Mapply_surface(800,250,265,133,hard[0]);
-
-        switch (selection) {
-            case MEASY : {Mapply_surface(135,250,265,133,easy[1]); break;}
-            case MMEDIUM : {Mapply_surface(467,250,265,133,med[1]); break;}
-            case MHARD : {Mapply_surface(800,250,265,133,hard[1]); break;}
-        }
-
-        Mapply_surface(490,450,220,85,play[0]);
-
-        Mapply_surface(20,20,120,66,back_button);
-        SDL_RenderPresent(MRenderer);
-        SDL_Delay(3);
-        *k= (*k+1) % 1360;
-    }
-}
-
-
 void addButton(){
 	menuButton[0].set(486, 714, 250,350, EVENT_PLAY);
 	menuButton[1].set(486, 714, 355, 455, EVENT_SCORE);
@@ -459,12 +387,9 @@ bool showMenu(bool trend)
                 pos= Position(e.button.x, e.button.y);
                 switch (pos){
 					case EVENT_PLAY: {
-                        if (selectMode(&k)) {
-                            Mix_HaltMusic();
-                            MquitSDL();
-                            return 1;
-                        }
-                        break;
+                        Mix_HaltMusic();
+                        MquitSDL();
+                        return 1;
                     }
 					case EVENT_SCORE: {
                         showScore(&k);

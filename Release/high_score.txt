@@ -1,6 +1,6 @@
  ABC
-1500 S
+1500 SD
+300 S
 100 <no_name>
-0 <no_name>
 0 <no_name>
 0
