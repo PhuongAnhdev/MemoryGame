@@ -749,6 +749,7 @@ void gameOver(bool playing)
     for (int i=0; i<5; i++){
         getline(fi,h_name[i]);
         fi>>h_score[i];
+		string tt;
     }
 
     int Rank=5;

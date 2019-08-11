@@ -1,6 +1,6 @@
- ABC
-1500 SD
+ PHUONGANH
+2500 ABC
+1500 DINDOHOI
+900 SD
 300 S
-100 <no_name>
-0 <no_name>
-0
+100

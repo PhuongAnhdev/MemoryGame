@@ -1,6 +1,0 @@
- ABC
-1500 COMNAMD
-400 SD
-300 S
-100 <no_name>
-0
