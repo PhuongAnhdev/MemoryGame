@@ -8,6 +8,7 @@
 
 #include "Menu.h"
 #include "Utils.h"
+#include "Button.h"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ SDL_Texture *hnamew[5], *hscorew[5];
 TTF_Font* font;
 Mix_Music* menu_beat;
 Mix_Chunk* Mclick;
+Button menuButton[NO_CLICK];
+
 
 void MloadImage()
 {
@@ -111,6 +114,17 @@ void MinitSDL()
     MloadImage();
 }
 
+
+int Position(int x_, int y_)
+{
+	for (int i = 0 ; i<NO_CLICK; i++){
+		if (menuButton[i].check_press_on(x_, y_)){
+			return menuButton[i].on_click_return();
+		}
+	}
+	return NO_CLICK;
+}
+
 void MquitSDL()
 {
     Mix_FreeMusic(menu_beat);
@@ -150,17 +164,6 @@ void apply_BG(int x, SDL_Texture* source)
 	off2.w = off1.w;
 	off2.h = 680;
     SDL_RenderCopy(MRenderer, source, &off1, &off2);
-}
-
-int Position(int x_, int y_)
-{
-    if (x_>=1075&&x_<=1175&&y_>=555&&y_<=655) return 4;
-    if (x_<=486||x_>=486+228) return 5;
-    if (y_>=250&&y_<=350) return 0;
-    if (y_>=355&&y_<=455) return 1;
-    if (y_>=460&&y_<=560) return 2;
-    if (y_>=565&&y_<=665) return 3;
-    return 5;
 }
 
 void MTransound(int* k,SDL_Texture* T1,SDL_Texture* T2)
@@ -424,9 +427,20 @@ bool selectMode(int* k)
     }
 }
 
+
+void addButton(){
+	menuButton[0].set(486, 714, 250,350, EVENT_PLAY);
+	menuButton[1].set(486, 714, 355, 455, EVENT_SCORE);
+	menuButton[2].set(486, 714, 460, 560, EVENT_TUTORIAL);
+	menuButton[3].set(486, 714, 565, 665, EVENT_QUIT);
+	menuButton[4].set(1075, 1175, 555, 655, EVENT_SOUND);
+}
+
+
 bool showMenu(bool trend)
 {
     MinitSDL();
+	addButton();
     int k=5;
     int pos;
     SDL_Event e;
@@ -444,7 +458,7 @@ bool showMenu(bool trend)
             if (e.type==SDL_MOUSEBUTTONDOWN){
                 pos= Position(e.button.x, e.button.y);
                 switch (pos){
-                    case 0: {
+					case EVENT_PLAY: {
                         if (selectMode(&k)) {
                             Mix_HaltMusic();
                             MquitSDL();
@@ -452,19 +466,19 @@ bool showMenu(bool trend)
                         }
                         break;
                     }
-                    case 1: {
+					case EVENT_SCORE: {
                         showScore(&k);
                         break;
                     }
-                    case 2: {
+					case EVENT_TUTORIAL: {
                         showTutorial(&k);
                         break;
                     }
-                    case 3: {
+					case EVENT_QUIT: {
                         showQuit(&k);
                         break;
                     }
-                    case 4: {
+                    case EVENT_SOUND: {
                         MTransound(&k,Mspeaker[Msound],Mspeaker[!Msound]);
                         break;
                     }

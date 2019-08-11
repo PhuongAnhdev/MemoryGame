@@ -13,7 +13,6 @@ class Card
 private:
 	int number;
 	bool upface, gotten;
-	SDL_Texture* texture;
 public:
 	Card();
 	Card(int number);
